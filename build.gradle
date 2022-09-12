@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        repositories {
+            maven {
+                url "https://plugins.gradle.org/m2/"
+
+            }
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
+    }
+}
+plugins {
+    id 'maven-publish'
+    id 'java'
+    id "com.github.breadmoirai.github-release" version "2.3.7"
+    id 'net.minecrell.plugin-yml.bukkit' version '0.5.1'
+}
+apply plugin: 'com.github.johnrengelman.shadow'
+
+version = "1.0.0-SNAPSHOT"
+group = "de.erdbeerbaerlp.lilyauth"
+archivesBaseName = "lilyauth"
+
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+//ShadowJar
+configurations {
+    embed
+    compileOnly.extendsFrom(embed)
+}
+shadowJar {
+    classifier = ''
+    configurations = [project.configurations.embed]
+    relocate "com.moandjiezana", "lilyauth.com.moandjiezana"
+}
+artifacts {
+    archives tasks.shadowJar
+}
+
+//Generates plugin.yml
+bukkit {
+    name = "LilyAuth"
+    main = "de.erdbeerbaerlp.lilyauth.LilyAuth"
+    author = "ErdbeerbaerLP"
+    version = project.version
+    website = "https://spigotmc.org/resources/discordintegration.87196/"
+    commands {
+        login {
+        }
+        register {
+        }
+    }
+    softDepend = ["dcintegration"]
+}
+
+
+repositories{
+    flatDir {
+        dirs 'libs'
+    }
+
+    maven { url 'https://jitpack.io' }
+    maven { url "https://repo.erdbeerbaerlp.de/repository/maven-public/" }
+}
+dependencies{
+    // ============= LilyBukkit =============
+    compileOnly 'LilyBukkit:LilyBukkit-a2.0.0.1'  //  ./lib/LilyBukkit-a2.0.0.1.jar
+    compileOnly 'de.erdbeerbaerlp:dcintegration.common:2.4.7-j8'  // DC Integration optional dependency
+
+    embed("de.erdbeerbaerlp:toml4j:2073e86")
+}
