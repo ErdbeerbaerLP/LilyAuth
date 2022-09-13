@@ -63,6 +63,7 @@ public class LilyAuthConfig {
         public String[] cannotChatMessage = new String[]{"§cYou are not Authenticated! Cannot chat!", "§aIf you have issues logging in, contact the server owner"};
         public String[] notAuthentificatedJoinMessage = new String[]{"§4You are not Authentificated! You are in read-only mode!", "§6If you have an account, use rosepad and login with it", "§6If you don't have one, use /register or /login"};
         public String invalidPasswordMessage = "§cInvalid password!";
+        public String alreadyLoggedIn = "§cYou are already logged in!";
 
         public static class JoinMessage {
             @TomlComment("Enable the join messages? Those messages will be sent on every join to the joining player")

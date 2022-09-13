@@ -216,9 +216,9 @@ public class LilyAuth extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Event.Priority.Highest, this);
         pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Event.Priority.Highest, this);
         final PluginCommand loginCmd = this.getServer().getPluginCommand("login");
-        loginCmd.setExecutor(new LoginCommand(this));
+        loginCmd.setExecutor(new LoginCommand());
         final PluginCommand registerCmd = this.getServer().getPluginCommand("register");
-        registerCmd.setExecutor(new RegisterCommand(this));
+        registerCmd.setExecutor(new RegisterCommand());
         if (pm.isPluginEnabled("dcintegration")) {
             System.out.println("Adding passwordreset command");
             PasswordCommand.register();

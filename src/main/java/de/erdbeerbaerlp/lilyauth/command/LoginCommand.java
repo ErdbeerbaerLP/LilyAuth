@@ -18,15 +18,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class LoginCommand implements CommandExecutor {
-    private final LilyAuth plugin;
-
-    public LoginCommand(final LilyAuth plugin) {
-        this.plugin = plugin;
-    }
 
     public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
         final UUID uuid = UUIDUtils.getUUIDFromName(commandSender.getName());
-        if (strings.length < 1) {
+        if (LilyAuth.isPlayerAuthed(Bukkit.getPlayer(commandSender.getName())))
+            commandSender.sendMessage(LilyAuthConfig.instance().messages.alreadyLoggedIn);
+        else if (strings.length < 1) {
             commandSender.sendMessage(LilyAuthConfig.instance().messages.noPassword);
         } else {
             final String pass = strings[0];
@@ -35,7 +32,7 @@ public class LoginCommand implements CommandExecutor {
                 if (LilyAuth.checkPassword(uuid, pass)) {
                     LilyAuth.loginStatus.put(uuid, true);
                     commandSender.sendMessage(LilyAuthConfig.instance().messages.loggedIn);
-                    if (LilyAuthConfig.instance().savePlayerIPs){
+                    if (LilyAuthConfig.instance().savePlayerIPs) {
                         try {
                             final Field entity = ((LBPlayer) player).getClass().getDeclaredField("entity");
                             entity.setAccessible(true);
@@ -44,7 +41,7 @@ public class LoginCommand implements CommandExecutor {
                             socket.setAccessible(true);
                             final Socket sock = (Socket) socket.get(o.playerNetServerHandler.netManager);
                             LilyAuth.setLastKnownIP(uuid, sock.getInetAddress().getHostAddress());
-                        }catch (Exception ignored) {
+                        } catch (Exception ignored) {
 
                         }
                     }
