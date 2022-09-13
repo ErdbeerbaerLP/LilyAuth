@@ -219,8 +219,7 @@ public class LilyAuth extends JavaPlugin {
         loginCmd.setExecutor(new LoginCommand());
         final PluginCommand registerCmd = this.getServer().getPluginCommand("register");
         registerCmd.setExecutor(new RegisterCommand());
-        if (pm.isPluginEnabled("dcintegration")) {
-            System.out.println("Adding passwordreset command");
+        if (pm.isPluginEnabled("DiscordIntegration")) {
             PasswordCommand.register();
         }
     }
