@@ -27,7 +27,11 @@ archivesBaseName = "lilyauth"
 
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+compileJava.options.encoding = 'UTF-8'
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 //ShadowJar
 configurations {
     embed
