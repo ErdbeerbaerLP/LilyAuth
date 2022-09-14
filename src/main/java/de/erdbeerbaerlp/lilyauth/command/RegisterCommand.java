@@ -2,10 +2,16 @@ package de.erdbeerbaerlp.lilyauth.command;
 
 import de.erdbeerbaerlp.lilyauth.LilyAuth;
 import de.erdbeerbaerlp.lilyauth.UUIDUtils;
+import net.minecraft.src.EntityPlayerMP;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import ru.vladthemountain.lilybukkit.core.entity.LBPlayer;
 
+import java.lang.reflect.Field;
+import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -27,6 +33,19 @@ public class RegisterCommand implements CommandExecutor {
                 } catch (NoSuchAlgorithmException ignored) {
                 }
                 LilyAuth.loginStatus.put(uuid, true);
+
+                try {
+                    final Player player = Bukkit.getPlayer(commandSender.getName());
+                    final Field entity = ((LBPlayer) player).getClass().getDeclaredField("entity");
+                    entity.setAccessible(true);
+                    final EntityPlayerMP o = (EntityPlayerMP) entity.get(player);
+                    final Field socket = o.playerNetServerHandler.netManager.getClass().getDeclaredField("networkSocket");
+                    socket.setAccessible(true);
+                    final Socket sock = (Socket) socket.get(o.playerNetServerHandler.netManager);
+                    LilyAuth.setLastKnownIP(uuid, sock.getInetAddress().getHostAddress());
+                } catch (Exception ignored) {
+
+                }
             }
         }
         return true;
