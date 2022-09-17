@@ -21,10 +21,6 @@ public class PasswordCommand extends DiscordCommand {
         this.addOption(OptionType.STRING, "password", "Password to set", true);
     }
 
-    public static void register() {
-        CommandRegistry.registerCommand(new PasswordCommand());
-    }
-
     public void execute(final SlashCommandInteractionEvent ev, final ReplyCallbackAction replyCallbackAction) {
         final OptionMapping password = ev.getOption("password");
         final CompletableFuture<InteractionHook> reply = replyCallbackAction.setEphemeral(true).submit();

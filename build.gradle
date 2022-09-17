@@ -52,7 +52,7 @@ bukkit {
     main = "de.erdbeerbaerlp.lilyauth.LilyAuth"
     author = "ErdbeerbaerLP"
     version = project.version
-    website = "https://spigotmc.org/resources/discordintegration.87196/"
+    website = "https://www.curseforge.com/minecraft/bukkit-plugins/lilyauth"
     commands {
         login {
         }

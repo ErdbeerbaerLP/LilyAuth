@@ -16,7 +16,7 @@ public class AuthPlayerListener extends PlayerListener {
     public void onPlayerChat(final PlayerChatEvent ev) {
         if (!LilyAuth.isPlayerAuthed(ev.getPlayer())) {
             ev.setCancelled(true);
-            for (String s : LilyAuthConfig.instance().messages.cannotChatMessage) {
+            for (final String s : LilyAuthConfig.instance().messages.cannotChatMessage) {
                 ev.getPlayer().sendMessage(s);
             }
         }
@@ -34,8 +34,6 @@ public class AuthPlayerListener extends PlayerListener {
             for (String s : LilyAuthConfig.instance().messages.joinMessage.lines) {
                 event.getPlayer().sendMessage(s.replace("%player%", event.getPlayer().getDisplayName()).replace("%onlinecount%", Bukkit.getOnlinePlayers().length + ""));
             }
-        //event.getPlayer().sendMessage("§cTo view server rules use /rules");
-        //event.getPlayer().sendMessage("§cTo get back to spawn type /spawn");
         if (LilyAuthConfig.instance().savePlayerIPs)
             try {
                 final Field entity = ((LBPlayer) event.getPlayer()).getClass().getDeclaredField("entity");

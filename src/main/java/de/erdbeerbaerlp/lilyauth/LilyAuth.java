@@ -3,7 +3,7 @@ package de.erdbeerbaerlp.lilyauth;
 import de.erdbeerbaerlp.lilyauth.command.LoginCommand;
 import de.erdbeerbaerlp.lilyauth.command.RegisterCommand;
 import de.erdbeerbaerlp.lilyauth.config.LilyAuthConfig;
-import de.erdbeerbaerlp.lilyauth.discord.PasswordCommand;
+import de.erdbeerbaerlp.lilyauth.discord.DCIProxy;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -13,7 +13,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -220,7 +219,7 @@ public class LilyAuth extends JavaPlugin {
         final PluginCommand registerCmd = this.getServer().getPluginCommand("register");
         registerCmd.setExecutor(new RegisterCommand());
         if (pm.isPluginEnabled("DiscordIntegration")) {
-            PasswordCommand.register();
+            DCIProxy.registerCommands();
         }
     }
 }
