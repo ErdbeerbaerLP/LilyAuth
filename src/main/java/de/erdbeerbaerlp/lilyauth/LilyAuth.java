@@ -141,10 +141,9 @@ public class LilyAuth extends JavaPlugin {
     }
 
     /**
-     * Checks if the last known IP for a Player is the
-     * @param uuid
-     * @param ip
-     * @return
+     * Checks if the ip address is the last known of that player
+     * @param uuid UUID of the player
+     * @param ip IP to check on
      */
     public static boolean checkLastKnownIP(final UUID uuid, final String ip){
         final String lastKnown = lastKnownIP.getOrDefault(uuid, "0.0.0.0");
