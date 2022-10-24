@@ -5,17 +5,28 @@ import com.moandjiezana.toml.TomlWriter;
 import com.moandjiezana.toml.TomlComment;
 import com.moandjiezana.toml.TomlIgnore;
 import de.erdbeerbaerlp.lilyauth.LilyAuth;
+import de.erdbeerbaerlp.lilyauth.crypto.MD5;
+import de.erdbeerbaerlp.lilyauth.crypto.Plaintext;
+import de.erdbeerbaerlp.lilyauth.crypto.SHA512;
 
 import java.io.File;
 import java.io.IOException;
 
 public class LilyAuthConfig {
+    public enum ConfAlgorithm {
+        PLAINTEXT(new Plaintext()),MD5(new MD5()),SHA512(new SHA512());
+        public final de.erdbeerbaerlp.lilyauth.crypto.Algorithm crypt;
+        ConfAlgorithm(de.erdbeerbaerlp.lilyauth.crypto.Algorithm crypt) {
+            this.crypt = crypt;
+        }
+
+
+    }
 
     @TomlIgnore
     private static LilyAuthConfig INSTANCE;
     @TomlIgnore
     private static final File configFile = new File(LilyAuth.pluginsFolder, "config.toml");
-    public Messages messages = new Messages();
 
     static {
         //First instance of the Config
@@ -49,10 +60,17 @@ public class LilyAuthConfig {
         w.write(this, configFile);
     }
 
-    @TomlComment("Whether or not to save a player's last IP address to allow instant login")
+    @TomlComment({"Determines how to store passwords, changing this will invalidate all saved ones!","Available: PLAINTEXT (not recommended), MD5, SHA512"})
+    public ConfAlgorithm passwordAlgorithm = ConfAlgorithm.SHA512;
+    @TomlComment("Save a player's last IP address to allow instant login?")
     public boolean savePlayerIPs = true;
+    @TomlComment({"Determines how to store IPs, changing this will invalidate all saved ones!","Available: PLAINTEXT, MD5, SHA512"})
+    public ConfAlgorithm ipAlgorithm = ConfAlgorithm.PLAINTEXT;
 
+    @TomlComment("Message configuration")
+    public Messages messages = new Messages();
     public static class Messages {
+
         public String loggedInWithIP = "§aYou have been logged in with your last known IP address";
         public String noPassword = "§cNo password supplied!";
         public String loggedIn = "§aYou have been logged in!";

@@ -13,7 +13,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.UUID;
@@ -103,14 +102,7 @@ public class LilyAuth extends JavaPlugin {
      * @return true if password is correct, false otherwise
      */
     public static boolean checkPassword(final UUID uuid, final String password) throws NoSuchAlgorithmException {
-        final MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        final byte[] bytes = md.digest();
-        final StringBuilder sb = new StringBuilder();
-        for (byte aByte : bytes) {
-            sb.append(Integer.toString((aByte & 0xFF) + 256, 16).substring(1));
-        }
-        return logins.containsKey(uuid) && logins.get(uuid).equals(sb.toString());
+        return logins.containsKey(uuid) && logins.get(uuid).equals(LilyAuthConfig.instance().passwordAlgorithm.crypt.hash(uuid,password));
     }
 
     /**
@@ -119,14 +111,7 @@ public class LilyAuth extends JavaPlugin {
      * @
      */
     public static void register(final UUID uuid, final String password) throws NoSuchAlgorithmException {
-        final MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        final byte[] bytes = md.digest();
-        final StringBuilder sb = new StringBuilder();
-        for (byte aByte : bytes) {
-            sb.append(Integer.toString((aByte & 0xFF) + 256, 16).substring(1));
-        }
-        logins.put(uuid, sb.toString());
+        logins.put(uuid, LilyAuthConfig.instance().passwordAlgorithm.crypt.hash(uuid,password));
         saveLogins();
     }
 
@@ -136,7 +121,7 @@ public class LilyAuth extends JavaPlugin {
      * @param ip IP address of the player
      */
     public static void setLastKnownIP(final UUID uuid, final String ip){
-        lastKnownIP.put(uuid,ip);
+        lastKnownIP.put(uuid,LilyAuthConfig.instance().ipAlgorithm.crypt.hash(uuid,ip));
         saveIPs();
     }
 
@@ -147,7 +132,7 @@ public class LilyAuth extends JavaPlugin {
      */
     public static boolean checkLastKnownIP(final UUID uuid, final String ip){
         final String lastKnown = lastKnownIP.getOrDefault(uuid, "0.0.0.0");
-        return ip.equals(lastKnown);
+        return LilyAuthConfig.instance().ipAlgorithm.crypt.hash(uuid,ip).equals(lastKnown);
     }
 
     /**
